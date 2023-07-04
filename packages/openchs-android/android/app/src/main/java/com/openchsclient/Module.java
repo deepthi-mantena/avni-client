@@ -24,6 +24,7 @@ public class Module extends ReactContextBaseJavaModule {
         ReactApplicationContext reactApplicationContext = getReactApplicationContext();
         Intent intent = new Intent(reactApplicationContext, SampleAbhaActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("sessionToken", authToken);
         reactApplicationContext.startActivity(intent);
     }
 }
