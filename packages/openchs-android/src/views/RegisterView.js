@@ -25,10 +25,6 @@ import PersonRegisterView from "./individual/PersonRegisterView";
 import SubjectTypeIcon from "./common/SubjectTypeIcon";
 import Separator from "./primitives/Separator";
 import PropTypes from "prop-types";
-import AuthService from "../service/AuthService"
-import { NativeModules, Button } from 'react-native';
-const { Module } = NativeModules;
-
 
 class RegisterView extends AbstractComponent {
     static propTypes = {
@@ -158,13 +154,6 @@ class RegisterView extends AbstractComponent {
         }
     }
 
-    async invokeModule(){
-        const authService = this.context.getService(AuthService);
-        const authToken = await authService.getAuthProviderService().getAuthToken()
-
-        Module.invoke(authToken)
-    }
-
     render() {
         General.logDebug("RegisterView", "render");
         let actions = [];
@@ -182,7 +171,6 @@ class RegisterView extends AbstractComponent {
                 return;
             }
             actions = actions.concat({action: this._addRegistrationAction(subjectType), subjectType});
-            actions = actions.concat({action: { fn: () => this.invokeModule(), label: 'Create Abha', backgroundColor: '#009688' }, subjectType: subjectType })
             const enrolCriteria = `privilege.name = '${Privilege.privilegeName.enrolSubject}' AND privilege.entityType = '${Privilege.privilegeEntityType.enrolment}' AND subjectTypeUuid = '${subjectType.uuid}'`;
             const allowedProgramTypeUuids = privilegeService.allowedEntityTypeUUIDListForCriteria(enrolCriteria, 'programUuid');
             const programs = formMappingService.findActiveProgramsForSubjectType(subjectType)

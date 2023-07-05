@@ -1,4 +1,4 @@
-import {ToastAndroid, Vibration, View, ScrollView} from "react-native";
+import {ToastAndroid, Vibration, View, ScrollView, Button, NativeModules} from "react-native";
 import PropTypes from 'prop-types';
 import React from "react";
 import AbstractComponent from "../../framework/view/AbstractComponent";
@@ -30,6 +30,8 @@ import {RejectionMessage} from "../approval/RejectionMessage";
 import SingleSelectMediaFormElement from "../form/formElement/SingleSelectMediaFormElement";
 import StaticFormElement from "../viewmodel/StaticFormElement";
 import EntityService from "../../service/EntityService";
+import AuthService from "../../service/AuthService";
+const { Module } = NativeModules;
 
 @Path('/personRegister')
 class PersonRegisterView extends AbstractComponent {
@@ -99,6 +101,13 @@ class PersonRegisterView extends AbstractComponent {
         saveDraftOn ? onYesPress() : AvniAlert(this.I18n.t('backPressTitle'), this.I18n.t('backPressMessage'), onYesPress, this.I18n);
     }
 
+     invokeModule = async () => {
+            const authService = this.context.getService(AuthService);
+            const authToken = await authService.getAuthProviderService().getAuthToken()
+
+            Module.invoke(authToken)
+        }
+
     render() {
         General.logDebug(this.viewName(), `render`);
         const profilePicFormElement = new StaticFormElement("profilePicture", false, 'Profile-Pics', []);
@@ -117,6 +126,8 @@ class PersonRegisterView extends AbstractComponent {
                         flexDirection: 'column',
                         paddingHorizontal: Distances.ScaledContentDistanceFromEdge
                     }}>
+                        <Button title="ABHA Registration" onPress={this.invokeModule} style={{marginBottom: 50}}/>
+
                         <GeolocationFormElement
                             actionName={Actions.REGISTRATION_SET_LOCATION}
                             errorActionName={Actions.SET_LOCATION_ERROR}
