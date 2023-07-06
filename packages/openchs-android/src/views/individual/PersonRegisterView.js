@@ -101,12 +101,22 @@ class PersonRegisterView extends AbstractComponent {
         saveDraftOn ? onYesPress() : AvniAlert(this.I18n.t('backPressTitle'), this.I18n.t('backPressMessage'), onYesPress, this.I18n);
     }
 
-     invokeModule = async () => {
-            const authService = this.context.getService(AuthService);
-            const authToken = await authService.getAuthProviderService().getAuthToken()
+    invokeModule = async () => {
+        const authService = this.context.getService(AuthService);
+        const authToken = await authService.getAuthProviderService().getAuthToken()
+        Module.invoke(authToken)
+    }
 
-            Module.invoke(authToken)
+    isButtonDisabled = () => {
+        const { individual } = this.state;
+        if (individual?.that?.observations) {
+          const result = individual.that.observations.find(
+            obj => obj.concept?.name === "ABHA number" && obj.valueJSON?.value
+          );
+          return !!result;
         }
+        return false;
+      };
 
     render() {
         General.logDebug(this.viewName(), `render`);
@@ -126,7 +136,7 @@ class PersonRegisterView extends AbstractComponent {
                         flexDirection: 'column',
                         paddingHorizontal: Distances.ScaledContentDistanceFromEdge
                     }}>
-                        <Button title="ABHA Registration" onPress={this.invokeModule} style={{marginBottom: 50}}/>
+                        <Button title="Register with ABHA >>" onPress={this.invokeModule} style={{marginBottom: 50}} disabled={this.isButtonDisabled()}/>
 
                         <GeolocationFormElement
                             actionName={Actions.REGISTRATION_SET_LOCATION}
