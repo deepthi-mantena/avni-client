@@ -2,7 +2,7 @@ package com.openchsclient;
 
 import android.content.Intent;
 
-import com.example.abha_creation.CreateAbhaActivity;
+import com.example.abha_create_verify.CreateAbhaActivity;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
