@@ -32,7 +32,7 @@ import StaticFormElement from "../viewmodel/StaticFormElement";
 import EntityService from "../../service/EntityService";
 import AuthService from "../../service/AuthService";
 import SettingsService from "../../service/SettingsService";
-import { Gender, getUnderlyingRealmCollection } from "openchs-models";
+import { AddressLevel, Gender, getUnderlyingRealmCollection } from "openchs-models";
 const { Module } = NativeModules;
 
 @Path('/personRegister')
@@ -81,7 +81,8 @@ class PersonRegisterView extends AbstractComponent {
             "lastName": "Sam",
             "middleName": "",
             "name": "Sameera Sam",
-            "phoneNumber": "9999999999"
+            "phoneNumber": "9999999999",
+            "villageTownCity": "NANDAGUDI"
         };
         this.dispatchAction(Actions.ON_LOAD,
             {
@@ -106,7 +107,15 @@ class PersonRegisterView extends AbstractComponent {
         const genders = this.getService(EntityService).getAll(Gender.schema.name);
         const genderList = getUnderlyingRealmCollection(genders);
         const patientGender = genderList.find(item => item.name === patientInfo.gender);
-        this.dispatchAction(Actions.REGISTRATION_ENTER_GENDER, { value: { uuid: patientGender.uuid, name: patientGender.name } });
+        const otherGender = genderList.find(item => item.name === "Other");
+        patientGender ? this.dispatchAction(Actions.REGISTRATION_ENTER_GENDER, { value: { uuid: patientGender.uuid, name: patientGender.name } }) : this.dispatchAction(Actions.REGISTRATION_ENTER_GENDER, { value: { uuid: otherGender.uuid, name: otherGender.name } });
+
+
+        const addressLevels = this.getService(EntityService).getAll(AddressLevel.schema.name);
+        const addressLevelsList = getUnderlyingRealmCollection(addressLevels);
+        const addressLevel = addressLevelsList.find(item => item.name === patientInfo.villageTownCity);
+        addressLevel && this.dispatchAction(Actions.REGISTRATION_ENTER_ADDRESS_LEVEL, { value: { uuid: addressLevel.uuid, name: addressLevel.name } });
+        
     }
 
     shouldComponentUpdate(nextProps, nextState) {
