@@ -32,6 +32,7 @@ import StaticFormElement from "../viewmodel/StaticFormElement";
 import EntityService from "../../service/EntityService";
 import AuthService from "../../service/AuthService";
 import SettingsService from "../../service/SettingsService";
+import { Gender, getUnderlyingRealmCollection } from "openchs-models";
 const { Module } = NativeModules;
 
 @Path('/personRegister')
@@ -70,6 +71,18 @@ class PersonRegisterView extends AbstractComponent {
 
     UNSAFE_componentWillMount() {
         const params = this.props.params;
+        let patientInfo = {
+            "abhaAddress": "12-34-567-101@sbx",
+            "abhaNumber": "1234567891011",
+            "address": "19B, street, chennai, Tamil Nadu, 600000",
+            "dateOfBirth": "01/01/2000",
+            "firstName": "Sameera",
+            "gender": "Male",
+            "lastName": "Sam",
+            "middleName": "",
+            "name": "Sameera Sam",
+            "phoneNumber": "9999999999"
+        };
         this.dispatchAction(Actions.ON_LOAD,
             {
                 individualUUID: params.individualUUID,
@@ -77,9 +90,23 @@ class PersonRegisterView extends AbstractComponent {
                 workLists: params.workLists,
                 isDraftEntity: params.isDraftEntity,
                 pageNumber: params.pageNumber,
-                taskUuid: params.taskUuid
+                taskUuid: params.taskUuid,
+                abhaResponse: patientInfo
             });
+
+        this.updateMandatoryFormFields(patientInfo);
         super.UNSAFE_componentWillMount();
+    }
+
+    updateMandatoryFormFields(patientInfo) {
+        this.dispatchAction(Actions.REGISTRATION_ENTER_DOB, { value: new Date(patientInfo.dateOfBirth) });
+        this.dispatchAction(Actions.REGISTRATION_ENTER_FIRST_NAME, { value: patientInfo.firstName });
+        this.dispatchAction(Actions.REGISTRATION_ENTER_LAST_NAME, { value: patientInfo.lastName });
+
+        const genders = this.getService(EntityService).getAll(Gender.schema.name);
+        const genderList = getUnderlyingRealmCollection(genders);
+        const patientGender = genderList.find(item => item.name === patientInfo.gender);
+        this.dispatchAction(Actions.REGISTRATION_ENTER_GENDER, { value: { uuid: patientGender.uuid, name: patientGender.name } });
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -170,6 +197,7 @@ class PersonRegisterView extends AbstractComponent {
                         <WizardButtons
                             next={{func: () => PersonRegisterViewsMixin.next(this), label: this.I18n.t('next')}}/>
                     </ScrollView>
+
                 </CHSContent>
             </CHSContainer>
         );
