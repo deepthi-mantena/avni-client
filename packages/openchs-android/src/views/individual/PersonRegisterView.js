@@ -32,6 +32,7 @@ import StaticFormElement from "../viewmodel/StaticFormElement";
 import EntityService from "../../service/EntityService";
 import AuthService from "../../service/AuthService";
 import SettingsService from "../../service/SettingsService";
+import {DeviceEventEmitter} from 'react-native';
 import { AddressLevel, Gender, getUnderlyingRealmCollection } from "openchs-models";
 const { Module } = NativeModules;
 
@@ -70,6 +71,20 @@ class PersonRegisterView extends AbstractComponent {
     }
 
     UNSAFE_componentWillMount() {
+        DeviceEventEmitter.addListener('abha_response', function (Event) {
+            console.log('ABHA Response Event Called');
+            if(Event && Event.patientInfo){
+                try {
+                    var patientInfo = JSON.parse(Event.patientInfo);
+                    console.log("patientInfo ", patientInfo);
+
+                }
+                catch (error) {
+                    console.error('Error parsing event data:', error);
+                }
+            }
+
+        });
         const params = this.props.params;
         let patientInfo = {
             "abhaAddress": "12-34-567-101@sbx",
