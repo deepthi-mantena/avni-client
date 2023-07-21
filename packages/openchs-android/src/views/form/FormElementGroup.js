@@ -70,11 +70,12 @@ class FormElementGroup extends AbstractComponent {
         let map = {
             "ABHA Address": "abhaAddress",
             "ABHA Number": "abhaNumber",
-            "Phone Number": "phoneNumber"
+            "Phone Number": "phoneNumber",
+            "Full Address": "address"
         }
         if (this.props.abhaResponse) {
             filteredFormElements
-                .filter(item => ["ABHA Address", "ABHA Number", "Phone Number"].includes(item.that.name))
+                .filter(item => Object.keys(map).includes(item.that.name))
                 .forEach(data => {
                     const key = map[data.that.name];
                     this.dispatchAction(Actions.PRIMITIVE_VALUE_CHANGE, { formElement: data, value: this.props.abhaResponse[key] });

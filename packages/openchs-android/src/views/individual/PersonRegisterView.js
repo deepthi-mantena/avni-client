@@ -70,35 +70,7 @@ class PersonRegisterView extends AbstractComponent {
         return this.getTitleForGroupSubject() || regName + ' ' || 'REG_DISPLAY-Individual';
     }
 
-    UNSAFE_componentWillMount() {
-        DeviceEventEmitter.addListener('abha_response', function (Event) {
-            console.log('ABHA Response Event Called');
-            if(Event && Event.patientInfo){
-                try {
-                    var patientInfo = JSON.parse(Event.patientInfo);
-                    console.log("patientInfo ", patientInfo);
-
-                }
-                catch (error) {
-                    console.error('Error parsing event data:', error);
-                }
-            }
-
-        });
-        const params = this.props.params;
-        let patientInfo = {
-            "abhaAddress": "12-34-567-101@sbx",
-            "abhaNumber": "1234567891011",
-            "address": "19B, street, chennai, Tamil Nadu, 600000",
-            "dateOfBirth": "01/01/2000",
-            "firstName": "Sameera",
-            "gender": "Male",
-            "lastName": "Sam",
-            "middleName": "",
-            "name": "Sameera Sam",
-            "phoneNumber": "9999999999",
-            "villageTownCity": "NANDAGUDI"
-        };
+    dispatchOnLoad(params, patientInfo) {
         this.dispatchAction(Actions.ON_LOAD,
             {
                 individualUUID: params.individualUUID,
@@ -109,8 +81,27 @@ class PersonRegisterView extends AbstractComponent {
                 taskUuid: params.taskUuid,
                 abhaResponse: patientInfo
             });
+    }
 
-        this.updateMandatoryFormFields(patientInfo);
+    UNSAFE_componentWillMount() {
+        const params = this.props.params;
+        let patientInfo;
+        this.dispatchOnLoad(params, null)
+
+        DeviceEventEmitter.addListener('abha_response', (Event) => {
+            if (Event && Event.patientInfo) {
+                try {
+                    patientInfo = JSON.parse(Event.patientInfo);
+                    if (patientInfo) {
+                        this.dispatchOnLoad(params, patientInfo);
+                        this.updateMandatoryFormFields(patientInfo);
+                    }
+                }
+                catch (error) {
+                    console.error('Error parsing event data:', error);
+                }
+            }
+        });
         super.UNSAFE_componentWillMount();
     }
 
@@ -130,7 +121,6 @@ class PersonRegisterView extends AbstractComponent {
         const addressLevelsList = getUnderlyingRealmCollection(addressLevels);
         const addressLevel = addressLevelsList.find(item => item.name === patientInfo.villageTownCity);
         addressLevel && this.dispatchAction(Actions.REGISTRATION_ENTER_ADDRESS_LEVEL, { value: { uuid: addressLevel.uuid, name: addressLevel.name } });
-        
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -163,10 +153,10 @@ class PersonRegisterView extends AbstractComponent {
     isButtonDisabled = () => {
         const { individual } = this.state;
         if (individual?.that?.observations) {
-          const result = individual.that.observations.find(
-            obj => obj.concept?.name === "ABHA Number" && obj.valueJSON?.value
-          );
-          return !!result;
+            const result = individual.that.observations.find(
+                obj => obj.concept?.name === "ABHA Number" && obj.valueJSON?.value
+            );
+            return !!result;
         }
         return false;
     };
