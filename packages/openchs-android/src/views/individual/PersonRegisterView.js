@@ -113,14 +113,13 @@ class PersonRegisterView extends AbstractComponent {
         const genders = this.getService(EntityService).getAll(Gender.schema.name);
         const genderList = getUnderlyingRealmCollection(genders);
         const patientGender = genderList.find(item => item.name === patientInfo.gender);
-        const otherGender = genderList.find(item => item.name === "Other");
-        patientGender ? this.dispatchAction(Actions.REGISTRATION_ENTER_GENDER, { value: { uuid: patientGender.uuid, name: patientGender.name } }) : this.dispatchAction(Actions.REGISTRATION_ENTER_GENDER, { value: { uuid: otherGender.uuid, name: otherGender.name } });
+        patientGender && this.dispatchAction(Actions.REGISTRATION_ENTER_GENDER, { value: { uuid: patientGender.uuid, name: patientGender.name } });
 
 
         const addressLevels = this.getService(EntityService).getAll(AddressLevel.schema.name);
         const addressLevelsList = getUnderlyingRealmCollection(addressLevels);
-        const addressLevel = addressLevelsList.find(item => item.name === patientInfo.villageTownCity);
-        addressLevel && this.dispatchAction(Actions.REGISTRATION_ENTER_ADDRESS_LEVEL, { value: { uuid: addressLevel.uuid, name: addressLevel.name } });
+        const addressLevel = addressLevelsList.find(item => item.name === (patientInfo.villageTownCity).toUpperCase());
+        addressLevel && this.dispatchAction(Actions.REGISTRATION_ENTER_ADDRESS_LEVEL, { value: addressLevel });
     }
 
     shouldComponentUpdate(nextProps, nextState) {
