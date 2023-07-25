@@ -32,6 +32,8 @@ import StaticFormElement from "../viewmodel/StaticFormElement";
 import EntityService from "../../service/EntityService";
 import AuthService from "../../service/AuthService";
 import SettingsService from "../../service/SettingsService";
+import {DeviceEventEmitter} from 'react-native';
+import { AddressLevel, Gender, getUnderlyingRealmCollection } from "openchs-models";
 const { Module } = NativeModules;
 
 @Path('/personRegister')
@@ -68,8 +70,7 @@ class PersonRegisterView extends AbstractComponent {
         return this.getTitleForGroupSubject() || regName + ' ' || 'REG_DISPLAY-Individual';
     }
 
-    UNSAFE_componentWillMount() {
-        const params = this.props.params;
+    dispatchOnLoad(params, patientInfo) {
         this.dispatchAction(Actions.ON_LOAD,
             {
                 individualUUID: params.individualUUID,
@@ -77,9 +78,48 @@ class PersonRegisterView extends AbstractComponent {
                 workLists: params.workLists,
                 isDraftEntity: params.isDraftEntity,
                 pageNumber: params.pageNumber,
-                taskUuid: params.taskUuid
+                taskUuid: params.taskUuid,
+                abhaResponse: patientInfo
             });
+    }
+
+    UNSAFE_componentWillMount() {
+        const params = this.props.params;
+        let patientInfo;
+        this.dispatchOnLoad(params, null)
+
+        DeviceEventEmitter.addListener('abha_response', (Event) => {
+            if (Event && Event.patientInfo) {
+                try {
+                    patientInfo = JSON.parse(Event.patientInfo);
+                    if (patientInfo) {
+                        this.dispatchOnLoad(params, patientInfo);
+                        this.updateMandatoryFormFields(patientInfo);
+                    }
+                }
+                catch (error) {
+                    console.error('Error parsing event data:', error);
+                }
+            }
+        });
         super.UNSAFE_componentWillMount();
+    }
+
+    updateMandatoryFormFields(patientInfo) {
+        this.dispatchAction(Actions.REGISTRATION_ENTER_DOB, { value: new Date(patientInfo.dateOfBirth) });
+        this.dispatchAction(Actions.REGISTRATION_ENTER_FIRST_NAME, { value: patientInfo.firstName });
+        this.dispatchAction(Actions.REGISTRATION_ENTER_LAST_NAME, { value: patientInfo.lastName });
+
+        const genders = this.getService(EntityService).getAll(Gender.schema.name);
+        const genderList = getUnderlyingRealmCollection(genders);
+        const patientGender = genderList.find(item => item.name === patientInfo.gender);
+        patientGender && this.dispatchAction(Actions.REGISTRATION_ENTER_GENDER, { value: { uuid: patientGender.uuid, name: patientGender.name } });
+
+
+        const addressLevels = this.getService(EntityService).getAll(AddressLevel.schema.name);
+        const addressLevelsList = getUnderlyingRealmCollection(addressLevels);
+        const addressLevel = addressLevelsList.find(item => item.name === (patientInfo.villageTownCity).toUpperCase());
+        addressLevel && this.dispatchAction(Actions.REGISTRATION_ENTER_ADDRESS_LEVEL, { value: addressLevel });
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -112,10 +152,10 @@ class PersonRegisterView extends AbstractComponent {
     isButtonDisabled = () => {
         const { individual } = this.state;
         if (individual?.that?.observations) {
-          const result = individual.that.observations.find(
-            obj => obj.concept?.name === "ABHA Number" && obj.valueJSON?.value
-          );
-          return !!result;
+            const result = individual.that.observations.find(
+                obj => obj.concept?.name === "ABHA Number" && obj.valueJSON?.value
+            );
+            return !!result;
         }
         return false;
     };
@@ -170,6 +210,7 @@ class PersonRegisterView extends AbstractComponent {
                         <WizardButtons
                             next={{func: () => PersonRegisterViewsMixin.next(this), label: this.I18n.t('next')}}/>
                     </ScrollView>
+
                 </CHSContent>
             </CHSContainer>
         );
