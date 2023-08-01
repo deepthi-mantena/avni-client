@@ -154,7 +154,7 @@ class PersonRegisterView extends AbstractComponent {
         const settings = this.context.getService(SettingsService);
         const authToken = await authService.getAuthProviderService().getAuthToken()
         const abhaNumbers = await this.getABHANumbers();
-        Module.invoke(authToken, abhaNumbers, settings.getSettings().hipBaseURL);
+        Module.invoke(authToken, abhaNumbers, settings.getHipBaseURL());
     }
 
     isButtonDisabled = () => {

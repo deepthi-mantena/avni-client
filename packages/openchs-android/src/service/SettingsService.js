@@ -61,6 +61,10 @@ class SettingsService extends BaseService {
         return settings[0];
     }
 
+    getHipBaseURL() {
+        return Config.HIP_BASE_URL;
+    }
+
     saveOrUpdate(entity) {
         const output = super.saveOrUpdate(entity, Settings.schema.name);
         let level = this.getSettings().logLevel;
