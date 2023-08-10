@@ -6,6 +6,8 @@ import BaseTask from "./BaseTask";
 import ErrorHandler from "../utility/ErrorHandler";
 import AuthenticationError, {NO_USER} from "../service/AuthenticationError";
 import GlobalContext from "../GlobalContext";
+import UserInfoService from "../service/UserInfoService";
+import AppConfig from "../framework/AppConfig";
 import _ from "lodash";
 import SettingsService from '../service/SettingsService';
 
@@ -18,7 +20,12 @@ class Sync extends BaseTask {
                 General.logInfo("Sync", "Skipping sync since idpType not set");
                 return false;
             }
-            this.initDependencies();
+            let isAutoSyncDisabled = globalContext.beanRegistry.getService(UserInfoService).getUserSettingsObject().disableAutoSync;
+            if (isAutoSyncDisabled || AppConfig.autoSyncDisabled) {
+                General.logInfo("Sync", "Skipping auto-sync since it is disabled");
+                return false;
+            }
+            await this.initDependencies();
             General.logInfo("Sync", "Starting SyncService");
             General.logInfo("Sync", "Getting SyncService");
             const syncService = globalContext.beanRegistry.getService("syncService");

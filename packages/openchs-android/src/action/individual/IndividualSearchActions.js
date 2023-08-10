@@ -8,7 +8,7 @@ import _ from "lodash";
 import PrivilegeService from "../../service/PrivilegeService";
 import {firebaseEvents, logEvent} from "../../utility/Analytics";
 import AddressLevelState from "../common/AddressLevelsState";
-import {ArrayUtil, CustomFilter} from "openchs-models";
+import { ArrayUtil, CustomFilter } from "openchs-models";
 
 export class IndividualSearchActions {
     static clone(state) {
