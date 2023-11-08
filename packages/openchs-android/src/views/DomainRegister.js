@@ -77,6 +77,15 @@ class DomainRegister extends AbstractComponent {
                                     />
                                 </View>
                                 <View style={{flexDirection: 'row', justifyContent: 'flex-end', marginTop: 16}}>
+                                <TouchableNativeFeedback background={TouchableNativeFeedback.SelectableBackground()}>
+                                                    <View style={[Styles.basicPrimaryButtonView,
+                                                        {minWidth: 144, width: '100%', flex: 1, flexDirection: "row", justifyContent: "center"}]}>
+                                                        <Text style={{
+                                                            color: Styles.whiteColor,
+                                                            fontSize: 16
+                                                        }}>{this.I18n.t('SUBMIT')}</Text>
+                                                    </View>
+                                                </TouchableNativeFeedback>
                                 </View>
                             </View>
                             <View style={{
