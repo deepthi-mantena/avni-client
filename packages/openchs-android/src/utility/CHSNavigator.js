@@ -11,6 +11,7 @@ import SystemRecommendationView from "../views/conclusion/SystemRecommendationVi
 import ChecklistView from "../views/program/ChecklistView";
 import NewVisitPageView from "../views/program/NewVisitPageView";
 import LoginView from "../views/LoginView";
+import DomainRegister from "../views/DomainRegister";
 import LandingView from "../views/LandingView";
 import MenuView from "../views/MenuView";
 import ForgotPasswordView from "../views/ForgotPasswordView";
@@ -48,6 +49,11 @@ import RuleEvaluationService from "../service/RuleEvaluationService";
 
 
 class CHSNavigator {
+    static navigateToDomainRegister(source) {
+        TypedTransition.from(source).with({
+        }).to(DomainRegister, true);
+    }
+
     static navigateToLoginView(source, allowSkipLogin, backFunction) {
         TypedTransition.from(source).with({
             allowSkipLogin: allowSkipLogin,

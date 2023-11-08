@@ -58,6 +58,9 @@ class RootView extends AbstractComponent {
         }
 
         General.logDebug("RootView", `User exists: ${userExists}. Database Synced: ${databaseSynced}`);
+
+        return CHSNavigator.navigateToDomainRegister(this);
+
         return CHSNavigator.navigateToLoginView(this, false);
     }
 
