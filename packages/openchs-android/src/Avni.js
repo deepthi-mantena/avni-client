@@ -17,11 +17,11 @@ export default class Avni extends Component {
     render() {
         LogBox.ignoreAllLogs();
         General.logDebug("Avni", "=====================>>>>>>>Rendering main app component");
-        const DomainRegister = require('./DomainRegister').default;
+        const ServerUrlConfiguration = require('./ServerUrlConfiguration').default;
         return (
             <View style={Avni.styles.container}>
                 <StatusBar backgroundColor={Colors.headerBackgroundColor} barStyle={'default'}/>
-                <DomainRegister/>
+                <ServerUrlConfiguration/>
             </View>
         );
     }
