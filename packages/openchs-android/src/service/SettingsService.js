@@ -7,7 +7,6 @@ import {ModelGeneral, Settings, LocaleMapping, OrganisationConfig} from 'openchs
 import Config from '../framework/Config';
 import _ from 'lodash';
 import EnvironmentConfig from "../framework/EnvironmentConfig";
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 @Service("settingsService")
 class SettingsService extends BaseService {
@@ -17,10 +16,9 @@ class SettingsService extends BaseService {
         super(db, beanStore);
     }
 
-    async init() {
+    init() {
         const dbInScope = this.db;
         General.logDebug("SettingsService", `Config.ENV: ${Config.ENV}`);
-        let serverURL = Config.allowServerURLConfig ? await AsyncStorage.getItem('serverUrl') : Config.SERVER_URL;
         this.db.write(() => {
             let settings = this.getSettings();
             General.logDebug("SettingsService", `Settings is initialised? ${!_.isNil(settings)}`);
@@ -30,7 +28,7 @@ class SettingsService extends BaseService {
                 settings.password = "";
                 settings.logLevel = InitialSettings.logLevel;
                 settings.pageSize = InitialSettings.pageSize;
-                settings.serverURL = serverURL;
+                settings.serverURL = Config.SERVER_URL;
                 settings.hipBaseURL = Config.HIP_BASE_URL;
                 settings.eSanjeevaniServiceUrl = Config.ESANJEEVANI_SERVICE_URL;
                 settings.poolId = "";

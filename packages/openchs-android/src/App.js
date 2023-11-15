@@ -70,12 +70,6 @@ class App extends Component {
         return GlobalContext.getInstance().beanRegistry.getService(name);
     }
 
-    async waitForServerURLInit(settingsService){
-        while(_.isNil(settingsService.getSettings())){
-            await new Promise(resolve => setTimeout(resolve, 2000));
-        }
-    }
-
     async componentDidMount() {
         General.logDebug("App", "componentDidMount");
         try {
@@ -88,7 +82,6 @@ class App extends Component {
                 globalContext.routes = PathRegistry.routes();
             }
 
-            await this.waitForServerURLInit(globalContext.beanRegistry.getService("settingsService"));
             const entitySyncStatusService = globalContext.beanRegistry.getService("entitySyncStatusService");
             entitySyncStatusService.setup();
 
