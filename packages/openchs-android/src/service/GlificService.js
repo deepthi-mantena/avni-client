@@ -11,7 +11,7 @@ class GlificService extends BaseService {
 
     init() {
         this.settingsService = this.getService(SettingsService);
-        this.serverUrl = this.settingsService.getSettings().serverURL;
+        //this.serverUrl = this.settingsService.getSettings().serverURL;
     }
 
     getAllMessagesForSubject(individualUUID) {

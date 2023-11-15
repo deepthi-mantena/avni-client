@@ -11,8 +11,8 @@ class SettingsActions {
         const settings = context.get(SettingsService).getSettings();
         const userInfo = context.get(UserInfoService).getUserInfo();
         const localeMappings = context.get(EntityService).getAll(LocaleMapping.schema.name);
-        const validationResults = settings.validate();
-        const serverURL = settings.serverURL;
+        const validationResults = undefined;
+        const serverURL = undefined;
         return {
             settings: settings,
             localeMappings: localeMappings,
