@@ -18,8 +18,8 @@ class SettingsService extends BaseService {
         super(db, beanStore);
     }
 
-   async init() {
-        let url= await AsyncStorage.getItem('serverUrl');
+    async init() {
+        let url = Config.allowServerURLConfig ? await AsyncStorage.getItem('serverUrl') : Config.SERVER_URL;
         const dbInScope = this.db;
         General.logDebug("SettingsService", `Config.ENV: ${Config.ENV}`);
         this.db.write(() => {
@@ -31,14 +31,14 @@ class SettingsService extends BaseService {
                 settings.password = "";
                 settings.logLevel = InitialSettings.logLevel;
                 settings.pageSize = InitialSettings.pageSize;
-                settings.serverURL = Config.SERVER_URL;
+                settings.serverURL = url;
                 settings.hipBaseURL = Config.HIP_BASE_URL;
                 settings.eSanjeevaniServiceUrl = Config.ESANJEEVANI_SERVICE_URL;
                 settings.poolId = "";
                 settings.clientId = Config.CLIENT_ID || "";
-                settings.serverURL = url;
-                RNRestart.Restart();
-
+                if (Config.allowServerURLConfig){
+                    RNRestart.Restart();
+                }
             }
 
             if (EnvironmentConfig.isDevMode()) {
