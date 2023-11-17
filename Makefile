@@ -189,6 +189,13 @@ release_staging_playstore: renew_env release_staging_playstore_without_clean
 release_prod_universal_without_clean:
 	enableSeparateBuildPerCPUArchitecture=false make release_prod
 
+release_urlconfig: as_urlconfig release
+
+release_urlconfig_universal_without_clean:
+	enableSeparateBuildPerCPUArchitecture=false make release_urlconfig
+
+release_urlconfig_universal:  renew_env release_urlconfig_universal_without_clean
+
 release_prod_universal:
 	enableSeparateBuildPerCPUArchitecture=false make release_prod
 
