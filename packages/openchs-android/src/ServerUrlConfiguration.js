@@ -49,8 +49,9 @@ class ServerUrlConfiguration extends Component {
 
     handleSubmit = async () => {
         this.setState({ isVerifying: true });
-        if (await this.isUrlValid(this.state.serverUrl)) {
-            this.storeServerUrl();
+        const lowerCaseUrl = this.state.serverUrl.replace(/^https/i, 'https');
+        if (await this.isUrlValid(lowerCaseUrl)) {
+            this.storeServerUrl(lowerCaseUrl);
             this.setState({ isURLInitialised: true });
         } else {
             this.setState({ isValidUrl: false });
@@ -58,9 +59,9 @@ class ServerUrlConfiguration extends Component {
         this.setState({ isVerifying: false });
     };
 
-    storeServerUrl = async () => {
+    storeServerUrl = async (url) => {
         try {
-            await AsyncStorage.setItem('serverUrl', this.state.serverUrl);
+            await AsyncStorage.setItem('serverUrl', url);
             console.log('Server URL stored successfully');
         } catch (error) {
             console.error('Error storing server URL:', error);
