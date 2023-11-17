@@ -1,4 +1,4 @@
 {
   "allowServerURLConfig": true,
-  "ENV": "dev"
+  "ENV": "prod"
 }
