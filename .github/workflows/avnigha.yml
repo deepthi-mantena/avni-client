@@ -38,10 +38,7 @@ jobs:
       run: |
         cd packages/openchs-android
         npm install --legacy-peer-deps
-    - name: Build with Gradle
-      run: |
-        cd packages/openchs-android/android
-        ./gradlew build --info --stacktrace
+  
 
     - name: Install Watchman
       run: |
