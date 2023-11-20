@@ -132,6 +132,7 @@ as_prerelease_dev: ; $(call _create_config,prerelease_dev)
 as_perf: ; $(call _create_config,perf)
 as_prod: ; $(call _create_config,prod)
 as_prod_dev: ; $(call _create_config,prod_dev)
+as_urlconfig: ; $(call _create_config,urlconfig)
 
 release_clean: ## If you get dex errors
 	rm -rf packages/openchs-android/android/app/build
@@ -187,6 +188,13 @@ release_staging_playstore: renew_env release_staging_playstore_without_clean
 
 release_prod_universal_without_clean:
 	enableSeparateBuildPerCPUArchitecture=false make release_prod
+
+release_urlconfig: as_urlconfig release
+
+release_urlconfig_universal_without_clean:
+	enableSeparateBuildPerCPUArchitecture=false make release_urlconfig
+
+release_urlconfig_universal:  renew_env release_urlconfig_universal_without_clean
 
 release_prod_universal:
 	enableSeparateBuildPerCPUArchitecture=false make release_prod
