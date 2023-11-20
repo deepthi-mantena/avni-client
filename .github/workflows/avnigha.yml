@@ -25,19 +25,12 @@ jobs:
 
     - name: Verify Java version
       run: java -version
-    - name: Build with Gradle
-      run: |
-       cd packages/openchs-android/android && ./gradlew build --stacktrace
-
-
-    
-
+   
     - name: Install Watchman
       run: |
         sudo apt-get update
         sudo apt-get install -y watchman
-    - name: List contents of the current directory
-      run: ls
+    
 
 
     - name: Generate keystore
@@ -46,10 +39,10 @@ jobs:
         keytool -genkeypair -storepass password -storetype PKCS12 -keyalg RSA -keysize 2048 -dname "CN=server" -alias bahmni -ext "SAN:c=DNS:localhost,IP:127.0.0.1" -keystore bahmni-release-key.keystore
         export BAHMNI_KEYSTORE_PASSWORD=password
         export BAHMNI_KEY_PASSWORD=password
-    - name: Change to root directory again
-      run: cd ../../..
-    - name: list files
-      run: ls
+  
 
     - name: Run make release_urlconfig_universal
-      run: make release_urlconfig_universal flavor='bahmni'
+      run: |
+        export BAHMNI_KEYSTORE_PASSWORD=password
+        export BAHMNI_KEY_PASSWORD=password
+        make release_urlconfig_universal flavor='bahmni'
