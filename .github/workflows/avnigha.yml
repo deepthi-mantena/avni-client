@@ -25,6 +25,11 @@ jobs:
 
     - name: Verify Java version
       run: java -version
+    - name: Build with Gradle
+      run: |
+        cd packages/openchs-android/android
+        ./gradlew build --info --stacktrace
+
    
     - name: Install Watchman
       run: |
