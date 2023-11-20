@@ -27,7 +27,7 @@ jobs:
       run: java -version
     - name: navigate to app  
       run: |
-        cd packages/openchs-android/android/app
+        cd packages/openchs-android/android
     - name: Build with Gradle
       run: ./gradlew build
 
