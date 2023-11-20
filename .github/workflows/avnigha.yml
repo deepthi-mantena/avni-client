@@ -25,6 +25,10 @@ jobs:
 
     - name: Verify Java version
       run: java -version
+    - name: Add Maven plugin to build.gradle
+      run: |
+          echo 'classpath 'org.apache.maven.plugins:maven-publish:3.0.0'' >> packages/openchs-android/build.gradle
+
     - name: Install Node.js and npm
       uses: actions/setup-node@v3
       with:
