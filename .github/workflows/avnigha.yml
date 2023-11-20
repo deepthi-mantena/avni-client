@@ -41,7 +41,8 @@ jobs:
         export BAHMNI_KEY_PASSWORD=password
     - name: Change to root directory again
       run: cd ../../..
-           ls 
+    - name: list files
+      run: ls
 
     - name: Run make release_urlconfig_universal
       run: make release_urlconfig_universal flavor='bahmni'
