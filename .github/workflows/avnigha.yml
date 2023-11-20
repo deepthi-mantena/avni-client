@@ -2,7 +2,7 @@ name: Sample GitHub Actions Workflow
 on:
   push:
     branches:
-      - BAH-3277_UI
+      - master
       
       
   workflow_dispatch:
@@ -32,7 +32,6 @@ jobs:
     - name: List contents of the current directory
       run: ls
 
-    
 
     - name: Generate keystore
       run: |
