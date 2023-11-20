@@ -25,11 +25,10 @@ jobs:
 
     - name: Verify Java version
       run: java -version
-    - name: navigate to app  
-      run: |
-        cd packages/openchs-android/android
     - name: Build with Gradle
-      run: ./gradlew build
+      run: |
+       cd packages/openchs-android/android && ./gradlew build
+
 
     
 
