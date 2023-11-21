@@ -42,6 +42,15 @@ jobs:
         export BAHMNI_KEYSTORE_PASSWORD=password
         export BAHMNI_KEY_PASSWORD=password
         make release_urlconfig_universal flavor='bahmni'
+
+    - name: List files in the directory
+      run: |
+        ls -R packages/openchs-android/android/app
+
+    - name: Print APK location
+      run: |
+        echo "APK Location: $(pwd)/packages/openchs-android/android/app/build/outputs/apk/bahmni/release"
+    
     - name: Upload APK as artifact
       uses: actions/upload-artifact@v2
       with:
